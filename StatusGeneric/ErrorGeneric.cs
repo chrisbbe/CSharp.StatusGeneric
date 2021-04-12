@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Text;
 
 namespace StatusGeneric
@@ -29,6 +30,11 @@ namespace StatusGeneric
             ErrorResult = error ?? throw new ArgumentNullException(nameof(error));
         }
 
+        public ErrorGeneric(string header, HttpStatusCode httpStatusCode, ValidationResult error) : this(header, error)
+        {
+            HttpStatusCode = httpStatusCode;
+        }
+
         internal ErrorGeneric(string prefix, ErrorGeneric existingError)
         {          
             Header = string.IsNullOrEmpty(prefix)
@@ -36,6 +42,7 @@ namespace StatusGeneric
                 : string.IsNullOrEmpty(existingError.Header) 
                     ? prefix
                     : prefix + HeaderSeparator + existingError.Header;
+            HttpStatusCode = existingError.HttpStatusCode;
             ErrorResult = existingError.ErrorResult;
             DebugData = existingError.DebugData;
         }
@@ -45,6 +52,11 @@ namespace StatusGeneric
         /// </summary>
         public string Header { get; private set; }
 
+        /// <summary>
+        /// HTTP Status Code to represent status code for error. Can be null.
+        /// </summary>
+        public HttpStatusCode? HttpStatusCode { get; }
+        
         /// <summary>
         /// This is the error provided
         /// </summary>
@@ -81,8 +93,7 @@ namespace StatusGeneric
         public override string ToString()
         {
             var start = string.IsNullOrEmpty(Header) ? "" : Header + ": ";
-            return start + ErrorResult.ToString();
+            return start + ErrorResult;
         }
-
     }
 }

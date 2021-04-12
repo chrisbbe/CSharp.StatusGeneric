@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 
 namespace StatusGeneric
 {
@@ -17,6 +18,7 @@ namespace StatusGeneric
         /// This is the default success message.
         /// </summary>
         public const string DefaultSuccessMessage = "Success";
+
         protected readonly List<ErrorGeneric> _errors = new List<ErrorGeneric>();
         private string _successMessage = DefaultSuccessMessage;
 
@@ -28,6 +30,8 @@ namespace StatusGeneric
         {
             Header = header;
         }
+
+        public HttpStatusCode? StatusCode { get; protected set; }
 
         /// <summary>
         /// The header provides a prefix to any errors you add. Useful if you want to have a general prefix to all your errors
@@ -77,6 +81,7 @@ namespace StatusGeneric
                     ? status.Errors
                     : status.Errors.Select(x => new ErrorGeneric(Header, x)));
             }
+
             if (IsValid && status.Message != DefaultSuccessMessage)
                 Message = status.Message;
 
@@ -92,8 +97,8 @@ namespace StatusGeneric
         public string GetAllErrors(string separator = null)
         {
             separator = separator ?? Environment.NewLine;
-            return _errors.Any() 
-                ? string.Join(separator, Errors) 
+            return _errors.Any()
+                ? string.Join(separator, Errors)
                 : null;
         }
 
@@ -107,6 +112,13 @@ namespace StatusGeneric
         {
             if (errorMessage == null) throw new ArgumentNullException(nameof(errorMessage));
             _errors.Add(new ErrorGeneric(Header, new ValidationResult(errorMessage, propertyNames)));
+            return this;
+        }
+
+        public IStatusGeneric AddError(HttpStatusCode statusCode, string errorMessage, params string[] propertyNames)
+        {
+            if (errorMessage == null) throw new ArgumentNullException(nameof(errorMessage));
+            _errors.Add(new ErrorGeneric(Header, statusCode, new ValidationResult(errorMessage, propertyNames)));
             return this;
         }
 
@@ -125,6 +137,14 @@ namespace StatusGeneric
             return this;
         }
 
+        public IStatusGeneric AddError(HttpStatusCode statusCode, Exception ex, string errorMessage,
+            params string[] propertyNames)
+        {
+            if (errorMessage == null) throw new ArgumentNullException(nameof(errorMessage));
+            _errors.Add(new ErrorGeneric(Header, statusCode, new ValidationResult(errorMessage, propertyNames)));
+            return this;
+        }
+
         /// <summary>
         /// This adds one ValidationResult to the Errors collection
         /// </summary>
@@ -134,6 +154,11 @@ namespace StatusGeneric
             _errors.Add(new ErrorGeneric(Header, validationResult));
         }
 
+        public void AddValidationResult(HttpStatusCode statusCode, ValidationResult validationResult)
+        {
+            _errors.Add(new ErrorGeneric(Header, statusCode, validationResult));
+        }
+
         /// <summary>
         /// This appends a collection of ValidationResults to the Errors collection
         /// </summary>
@@ -141,6 +166,100 @@ namespace StatusGeneric
         public void AddValidationResults(IEnumerable<ValidationResult> validationResults)
         {
             _errors.AddRange(validationResults.Select(x => new ErrorGeneric(Header, x)));
+        }
+
+        public void AddValidationResults(HttpStatusCode statusCode, IEnumerable<ValidationResult> validationResults)
+        {
+            _errors.AddRange(validationResults
+                .Select(x => new ErrorGeneric(Header, statusCode, x)));
+        }
+
+        public void RunAndCatchEx(
+            Action actionToRun,
+            HttpStatusCode errorStatusCode = default,
+            HttpStatusCode successStatusCode = default
+        )
+        {
+            try
+            {
+                actionToRun();
+            }
+            catch (Exception ex)
+            {
+                if (errorStatusCode is not default(HttpStatusCode))
+                    AddError(errorStatusCode, ex, ex.Message);
+                else
+                    AddError(ex, ex.Message);
+            }
+
+            StatusCode = successStatusCode is default(HttpStatusCode) ? null : successStatusCode;
+        }
+
+        public void RunAndCatchEx<TException>(
+            Action actionToRun,
+            HttpStatusCode errorStatusCode = default,
+            HttpStatusCode successStatusCode = default
+        ) where TException : Exception
+        {
+            try
+            {
+                actionToRun();
+            }
+            catch (TException ex)
+            {
+                if (errorStatusCode is not default(HttpStatusCode))
+                    AddError(errorStatusCode, ex, ex.Message);
+                else
+                    AddError(ex, ex.Message);
+            }
+
+            StatusCode = successStatusCode is default(HttpStatusCode) ? null : successStatusCode;
+        }
+
+        public T RunAndCatchEx<T>(
+            Func<T> funcToRun,
+            HttpStatusCode errorStatusCode = default,
+            HttpStatusCode successStatusCode = default
+        )
+        {
+            try
+            {
+                var result = funcToRun();
+                StatusCode = successStatusCode is default(HttpStatusCode) ? null : successStatusCode;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                if (errorStatusCode is not default(HttpStatusCode))
+                    AddError(errorStatusCode, ex, ex.Message);
+                else
+                    AddError(ex, ex.Message);
+            }
+
+            return default;
+        }
+
+        public T RunAndCatchEx<T, TException>(
+            Func<T> funcToRun,
+            HttpStatusCode errorStatusCode = default,
+            HttpStatusCode successStatusCode = default
+        ) where TException : Exception
+        {
+            try
+            {
+                var result = funcToRun();
+                StatusCode = successStatusCode is default(HttpStatusCode) ? null : successStatusCode;
+                return result;
+            }
+            catch (TException ex)
+            {
+                if (errorStatusCode is not default(HttpStatusCode))
+                    AddError(errorStatusCode, ex, ex.Message);
+                else
+                    AddError(ex, ex.Message);
+            }
+
+            return default;
         }
     }
 }
