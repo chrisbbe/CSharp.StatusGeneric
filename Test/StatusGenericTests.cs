@@ -3,13 +3,13 @@
 
 using System;
 using System.Linq;
+using Shouldly;
 using StatusGeneric;
 using Xunit;
-using Xunit.Extensions.AssertExtensions;
 
 namespace Test
 {
-    public class TestStatusGeneric
+    public class StatusGenericTests
     {
         [Fact]
         public void TestGenericStatusOk()
@@ -22,7 +22,7 @@ namespace Test
             //VERIFY
             status.IsValid.ShouldBeTrue();
             status.Errors.Any().ShouldBeFalse();
-            status.Message.ShouldEqual("Success");
+            status.Message.ShouldBe("Success");
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Test
             status.IsValid.ShouldBeTrue();
             status.HasErrors.ShouldBeFalse();
             status.Errors.Any().ShouldBeFalse();
-            status.Message.ShouldEqual("New message");
+            status.Message.ShouldBe("New message");
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Test
             status.IsValid.ShouldBeTrue();
             status.HasErrors.ShouldBeFalse();
             status.Errors.Any().ShouldBeFalse();
-            status.Message.ShouldEqual("New message");
+            status.Message.ShouldBe("New message");
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace Test
             status.IsValid.ShouldBeTrue();
             status.HasErrors.ShouldBeFalse();
             status.Errors.Any().ShouldBeFalse();
-            status.Message.ShouldEqual("New message");
+            status.Message.ShouldBe("New message");
         }
 
         [Fact]
@@ -85,9 +85,9 @@ namespace Test
             //VERIFY
             status.IsValid.ShouldBeFalse();
             status.HasErrors.ShouldBeTrue();
-            status.Errors.Single().ToString().ShouldEqual("This is an error.");
+            status.Errors.Single().ToString().ShouldBe("This is an error.");
             status.Errors.Single().DebugData.ShouldBeNull();
-            status.Message.ShouldEqual("Failed with 1 error");
+            status.Message.ShouldBe("Failed with 1 error");
         }
 
         [Fact]
@@ -103,8 +103,8 @@ namespace Test
 
             //VERIFY
             status2.IsValid.ShouldBeFalse();
-            status2.Errors.Single().ToString().ShouldEqual("This is an error.");
-            status2.Message.ShouldEqual("Failed with 1 error");
+            status2.Errors.Single().ToString().ShouldBe("This is an error.");
+            status2.Message.ShouldBe("Failed with 1 error");
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace Test
 
             //VERIFY
             status2.IsValid.ShouldBeTrue();
-            status2.Message.ShouldEqual("My message");
+            status2.Message.ShouldBe("My message");
         }
 
         [Fact]
@@ -134,7 +134,7 @@ namespace Test
 
             //VERIFY
             status.IsValid.ShouldBeFalse();
-            status.Errors.Single().ToString().ShouldEqual("MyClass: This is an error.");
+            status.Errors.Single().ToString().ShouldBe("MyClass: This is an error.");
         }
 
         [Fact]
@@ -150,8 +150,8 @@ namespace Test
 
             //VERIFY
             status1.IsValid.ShouldBeFalse();
-            status1.Errors.Single().ToString().ShouldEqual("MyClass>MyProp: This is an error.");
-            status1.Message.ShouldEqual("Failed with 1 error");
+            status1.Errors.Single().ToString().ShouldBe("MyClass>MyProp: This is an error.");
+            status1.Message.ShouldBe("Failed with 1 error");
         }
 
         [Fact]
@@ -172,11 +172,11 @@ namespace Test
 
             //VERIFY
             var lines = status.Errors.Single().DebugData.Split(Environment.NewLine);
-            lines.Length.ShouldEqual(6);
-            lines[0].ShouldEqual("This is a test");
+            lines.Length.ShouldBe(6);
+            lines[0].ShouldBe("This is a test");
             lines[1].ShouldStartWith("StackTrace:   at Test.TestStatusGeneric.MethodToThrowException()");
-            lines[3].ShouldEqual("Data: data1\t1");
-            lines[4].ShouldEqual("Data: data2\t2");
+            lines[3].ShouldBe("Data: data1\t1");
+            lines[4].ShouldBe("Data: data2\t2");
         }
 
         private void MethodToThrowException()
@@ -199,7 +199,7 @@ namespace Test
 
             //VERIFY
             status.IsValid.ShouldBeTrue();
-            status.Result.ShouldEqual(null);
+            status.Result.ShouldBeNull();
         }
 
         [Fact]
@@ -213,7 +213,7 @@ namespace Test
 
             //VERIFY
             status.IsValid.ShouldBeTrue();
-            status.Result.ShouldEqual("Hello world");
+            status.Result.ShouldBe("Hello world");
         }
 
         [Fact]
@@ -228,8 +228,8 @@ namespace Test
 
             //VERIFY
             status.IsValid.ShouldBeFalse();
-            status.Result.ShouldEqual(null);
-            statusCopy.ShouldEqual(status);
+            status.Result.ShouldBeNull();
+            statusCopy.ShouldBe(status);
         }
     }
 }
