@@ -19,7 +19,7 @@ namespace StatusGeneric
         /// </summary>
         public const string DefaultSuccessMessage = "Success";
 
-        protected readonly List<ErrorGeneric> _errors = new List<ErrorGeneric>();
+        protected readonly List<ErrorGeneric> _errors = new();
         private string _successMessage = DefaultSuccessMessage;
 
         /// <summary>
@@ -66,6 +66,12 @@ namespace StatusGeneric
             set => _successMessage = value;
         }
 
+        public StatusGenericHandler SetStatus(HttpStatusCode statusCode)
+        {
+            StatusCode = statusCode;
+            return this;
+        }
+
         /// <summary>
         /// This allows statuses to be combined. Copies over any errors and replaces the Message if the currect message is null
         /// If you are using Headers then it will combine the headers in any errors in combines
@@ -85,6 +91,8 @@ namespace StatusGeneric
             if (IsValid && status.Message != DefaultSuccessMessage)
                 Message = status.Message;
 
+            StatusCode ??= status.StatusCode;
+            
             return this;
         }
 
@@ -96,11 +104,14 @@ namespace StatusGeneric
         /// <returns>a single string with all errors separated by the 'separator' string</returns>
         public string GetAllErrors(string separator = null)
         {
-            separator = separator ?? Environment.NewLine;
+            separator ??= Environment.NewLine;
             return _errors.Any()
                 ? string.Join(separator, Errors)
                 : null;
         }
+        
+        ///<inheritdoc/>
+        public HttpStatusCode? GetLastStatusCode() => HasErrors ? _errors.Last().HttpStatusCode : StatusCode;
 
         /// <summary>
         /// This adds one error to the Errors collection

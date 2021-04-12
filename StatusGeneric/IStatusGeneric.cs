@@ -2,6 +2,7 @@
 // Licensed under MIT license. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
+using System.Net;
 
 namespace StatusGeneric
 {
@@ -32,6 +33,11 @@ namespace StatusGeneric
         string Message { get; set; }
 
         /// <summary>
+        /// This may be set by any method that returns a status.
+        /// </summary>
+        HttpStatusCode? StatusCode { get; }
+
+        /// <summary>
         /// This allows statuses to be combined
         /// </summary>
         /// <param name="status"></param>
@@ -44,5 +50,12 @@ namespace StatusGeneric
         /// <param name="separator">if null then each errors is separated by Environment.NewLine, otherwise uses the separator you provide</param>
         /// <returns>a single string with all errors separated by the 'separator' string</returns>
         string GetAllErrors(string separator = null);
+
+        /// <summary>
+        /// This is a simple method to find and return the HttpStatusCod on the last error added to
+        /// the status, if any.
+        /// </summary>
+        /// <returns>The HttpStatus for the last error reported, if any, otherwise null.</returns>
+        HttpStatusCode? GetLastStatusCode();
     }
 }

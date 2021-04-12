@@ -1,5 +1,8 @@
 # GenericServices.StatusGeneric
 
+**This is a fork of [GenericServices.StatusGeneric](https://github.com/JonPSmith/GenericServices.StatusGeneric), extending the original library with additional features.**
+***
+
 This [NuGet library](https://www.nuget.org/packages/GenericServices.StatusGeneric/) provides a way to return the status of a method/class that you run. It contains two main things
 
 1. A IReadOnlyList of `Errors`, which may be empty. If the list is empty, then the `IsValid` property of the status will be true.
@@ -68,7 +71,7 @@ public IStatusGeneric<int> StatusGenericNum(int i)
     //series of tests and then return all the errors together
     //Good because the user gets all the errors at once
     if (i == 20)
-        status.AddError("input must not be 20", nameof(i));
+        status.AddError(HttpStatusCode.BadRequest, "input must not be 20", nameof(i));
     if (i == 30)
         status.AddError("input must not be 30", nameof(i));
     if (i == 40)
@@ -118,3 +121,12 @@ If you are testing a service its always good to check that the service returns t
 ```c#
 status.IsValid.ShouldBeTrue(status.GetAllErrors());
 ```
+
+# Changelog
+
+## [1.2.0] - 2020-04-12
+### Added
+- Possibility to provide [HttpStatusCode](https://docs.microsoft.com/en-us/dotnet/api/system.net.httpstatuscode?view=netstandard-2.0) enums to errors.
+
+## [1.1.1] - 2020-04-12
+Forked from [GenericServices.StatusGeneric](https://github.com/JonPSmith/GenericServices.StatusGeneric)

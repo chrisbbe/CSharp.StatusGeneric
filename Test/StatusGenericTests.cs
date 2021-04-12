@@ -174,7 +174,7 @@ namespace Test
             var lines = status.Errors.Single().DebugData.Split(Environment.NewLine);
             lines.Length.ShouldBe(6);
             lines[0].ShouldBe("This is a test");
-            lines[1].ShouldStartWith("StackTrace:   at Test.TestStatusGeneric.MethodToThrowException()");
+            lines[1].ShouldStartWith("StackTrace:   at Test.StatusGenericTests.MethodToThrowException()");
             lines[3].ShouldBe("Data: data1\t1");
             lines[4].ShouldBe("Data: data2\t2");
         }
