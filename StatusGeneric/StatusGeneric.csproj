@@ -1,43 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <LangVersion>9</LangVersion>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.26" PrivateAssets="All"/>
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.26" PrivateAssets="All"/>
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0"/>
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0"/>
+  </ItemGroup>
 
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>1.2.3</PackageVersion>
-        <Version>1.2.3</Version>
-        <AssemblyVersion>1.2.3</AssemblyVersion>
-        <FileVersion>1.2.3</FileVersion>
-        <PackageId>CSharp.StatusGeneric</PackageId>
-        <Authors>Jon P Smith and Christian B Bergersen</Authors>
-        <Company>Selective Analytics</Company>
-        <Product>CSharp.StatusGeneric</Product>
-        <Description>A support library to provide a common status handling for my projects.</Description>
-        <Copyright>Copyright (c) 2019 Jon P Smith and Christian Bergum Bergersen</Copyright>
-        <PackageLicense>https://github.com/chrisbbe/CSharp.StatusGeneric/blob/master/LICENSE</PackageLicense>
-        <PackageProjectUrl>https://github.com/chrisbbe/CSharp.StatusGeneric</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/chrisbbe/CSharp.StatusGeneric</RepositoryUrl>
-        <RepositoryType>GitHub</RepositoryType>
-        <PackageReleaseNotes>
-            - Updated to provide needed features for GenericBizRunner
-            - Added some interfaces and made Message read/write
-        </PackageReleaseNotes>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageVersion>1.2.3</PackageVersion>
+    <Version>1.2.3</Version>
+    <AssemblyVersion>1.2.3</AssemblyVersion>
+    <FileVersion>1.2.3</FileVersion>
+    <PackageId>CSharp.StatusGeneric</PackageId>
+    <Authors>Jon P Smith and Christian B Bergersen</Authors>
+    <Company>Selective Analytics</Company>
+    <Product>CSharp.StatusGeneric</Product>
+    <Description>A support library to provide a common status handling for my projects.</Description>
+    <Copyright>Copyright (c) 2019 Jon P Smith and Christian Bergum Bergersen</Copyright>
+    <PackageLicense>https://github.com/chrisbbe/CSharp.StatusGeneric/blob/master/LICENSE</PackageLicense>
+    <PackageProjectUrl>https://github.com/chrisbbe/CSharp.StatusGeneric</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/chrisbbe/CSharp.StatusGeneric</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageReleaseNotes>
+      - Updated to provide needed features for GenericBizRunner
+      - Added some interfaces and made Message read/write
+    </PackageReleaseNotes>
+  </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DocumentationFile>bin\Release\netstandard2.0\StatusGeneric.xml</DocumentationFile>
-    </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard2.0\StatusGeneric.xml</DocumentationFile>
+  </PropertyGroup>
 
 </Project>
