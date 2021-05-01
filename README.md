@@ -1,4 +1,8 @@
 # GenericServices.StatusGeneric
+ [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=CSharp.StatusGeneric&metric=alert_status)](https://sonarcloud.io/dashboard?id=CSharp.StatusGeneric) 
+ [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=CSharp.StatusGeneric&metric=coverage)](https://sonarcloud.io/component_measures/metric/coverage/list?id=CSharp.StatusGeneric)
+ [![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=CSharp.StatusGeneric&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=CSharp.StatusGeneric)
+ [![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=CSharp.StatusGeneric&metric=vulnerabilities)](https://sonarcloud.io/component_measures/metric/security_rating/list?id=CSharp.StatusGeneric)
 
 **This is a fork of [GenericServices.StatusGeneric](https://github.com/JonPSmith/GenericServices.StatusGeneric), extending the original library with additional features.**
 ***
