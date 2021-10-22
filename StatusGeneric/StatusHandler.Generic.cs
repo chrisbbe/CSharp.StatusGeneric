@@ -11,7 +11,7 @@ namespace StatusGeneric
   /// <summary>
   /// This contains the error handling part of the GenericBizRunner
   /// </summary>
-  public class StatusGenericHandler<T> : StatusGenericHandler, IStatusGeneric<T>
+  public class StatusHandler<T> : StatusHandler, IStatus<T>
   {
     private T _result;
 
@@ -27,13 +27,13 @@ namespace StatusGeneric
     /// The result would be error message in status2 would be updates to start with "MyClass>MyProp: This is my error message."
     /// </summary>
     /// <param name="status"></param>
-    public IStatusGeneric<T> CombineStatuses(IStatusGeneric<T> status)
+    public IStatus<T> CombineStatuses(IStatus<T> status)
     {
       if (!status.IsValid)
       {
         _errors.AddRange(string.IsNullOrEmpty(Header)
           ? status.Errors
-          : status.Errors.Select(x => new ErrorGeneric(Header, x)));
+          : status.Errors.Select(x => new Error(Header, x)));
       }
 
       if (IsValid && status.Message != DefaultSuccessMessage)
@@ -49,13 +49,13 @@ namespace StatusGeneric
     /// </summary>
     /// <param name="result"></param>
     /// <returns></returns>
-    public StatusGenericHandler<T> SetResult(T result)
+    public StatusHandler<T> SetResult(T result)
     {
       _result = result;
       return this;
     }
 
-    public StatusGenericHandler<T> SetResult(HttpStatusCode statusCode, T result)
+    public StatusHandler<T> SetResult(HttpStatusCode statusCode, T result)
     {
       StatusCode = statusCode;
       _result = result;
@@ -67,10 +67,10 @@ namespace StatusGeneric
     /// </summary>
     /// <param name="errorMessage">The text of the error message</param>
     /// <param name="propertyNames">optional. A list of property names that this error applies to</param>
-    public new IStatusGeneric<T> AddError(string errorMessage, params string[] propertyNames)
+    public new IStatus<T> AddError(string errorMessage, params string[] propertyNames)
     {
       if (errorMessage == null) throw new ArgumentNullException(nameof(errorMessage));
-      _errors.Add(new ErrorGeneric(Header, new ValidationResult(errorMessage, propertyNames)));
+      _errors.Add(new Error(Header, new ValidationResult(errorMessage, propertyNames)));
       return this;
     }
 
@@ -80,7 +80,7 @@ namespace StatusGeneric
     /// <param name="httpStatusCode">The HTTP Status Code for the error.</param>
     /// <param name="errorMessage">The text of the error message.</param>
     /// <param name="propertyNames">Optional: A list of property names that this error applies to.</param>
-    public new IStatusGeneric<T> AddError(
+    public new IStatus<T> AddError(
       HttpStatusCode httpStatusCode,
       string errorMessage,
       params string[] propertyNames
@@ -88,7 +88,7 @@ namespace StatusGeneric
     {
       if (errorMessage is null) throw new ArgumentNullException(nameof(errorMessage));
       StatusCode = httpStatusCode;
-      _errors.Add(new ErrorGeneric(
+      _errors.Add(new Error(
         Header,
         httpStatusCode,
         new ValidationResult(errorMessage, propertyNames)

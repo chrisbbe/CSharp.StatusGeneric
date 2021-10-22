@@ -8,9 +8,9 @@ namespace Test
 {
   public class ExampleUsages
   {
-    public IStatusGeneric NonStatusGenericString(string s)
+    public IStatus NonStatusGenericString(string s)
     {
-      var status = new StatusGenericHandler();
+      var status = new StatusHandler();
 
       //add error and return immediately
       if (s == null)
@@ -25,9 +25,9 @@ namespace Test
       return status;
     }
 
-    public IStatusGeneric<string> StatusGenericNumReturnString(int i)
+    public IStatus<string> StatusGenericNumReturnString(int i)
     {
-      var status = new StatusGenericHandler<string>();
+      var status = new StatusHandler<string>();
 
       //add error and return immediately
       if (i <= 0)
@@ -40,9 +40,9 @@ namespace Test
       return status;
     }
 
-    public IStatusGeneric NonStatusGenericNum(int i)
+    public IStatus NonStatusGenericNum(int i)
     {
-      var status = new StatusGenericHandler();
+      var status = new StatusHandler();
 
       //add error and return immediately
       if (i <= 0)
@@ -64,9 +64,9 @@ namespace Test
       return status;
     }
 
-    public IStatusGeneric<int> StatusGenericNum(int i)
+    public IStatus<int> StatusGenericNum(int i)
     {
-      var status = new StatusGenericHandler<int>();
+      var status = new StatusHandler<int>();
 
       //series of tests and then return all the errors together
       //Good because the user gets all the errors at once
@@ -104,7 +104,7 @@ namespace Test
       if (combinedNums <= 0)
         status.AddError("input must be positive", nameof(i));
 
-      //If you return a IStatusGeneric<T> and there are errors then the result will be set to default
+      //If you return a IStatus<T> and there are errors then the result will be set to default
       return status;
     }
   }

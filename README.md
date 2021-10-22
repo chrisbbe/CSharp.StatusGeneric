@@ -128,6 +128,12 @@ status.IsValid.ShouldBeTrue(status.GetAllErrors());
 
 # Changelog
 
+## [1.3.0] - 2021-10-22
+### Breaking change
+- Renamed StatusGenericHandler to StatusHandler.
+- Renamed IStatusGeneric to IStatus.
+- ErrorGeneric to Error.
+
 ## [1.2.0] - 2020-04-12
 ### Added
 - Possibility to provide [HttpStatusCode](https://docs.microsoft.com/en-us/dotnet/api/system.net.httpstatuscode?view=netstandard-2.0) enums to errors.

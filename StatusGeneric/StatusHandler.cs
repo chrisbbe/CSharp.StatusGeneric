@@ -12,21 +12,21 @@ namespace StatusGeneric
   /// <summary>
   /// This contains the error handling part of the GenericBizRunner
   /// </summary>
-  public class StatusGenericHandler : IStatusGenericHandler
+  public class StatusHandler : IStatusHandler
   {
     /// <summary>
     /// This is the default success message.
     /// </summary>
     public const string DefaultSuccessMessage = "Success";
 
-    protected readonly List<ErrorGeneric> _errors = new();
+    protected readonly List<Error> _errors = new();
     private string _successMessage = DefaultSuccessMessage;
 
     /// <summary>
-    /// This creates a StatusGenericHandler, with optional header (see Header property, and CombineStatuses)
+    /// This creates a StatusHandler, with optional header (see Header property, and CombineStatuses)
     /// </summary>
     /// <param name="header"></param>
-    public StatusGenericHandler(string header = "")
+    public StatusHandler(string header = "")
     {
       Header = header;
     }
@@ -42,7 +42,7 @@ namespace StatusGeneric
     /// <summary>
     /// This holds the list of ValidationResult errors. If the collection is empty, then there were no errors
     /// </summary>
-    public IReadOnlyList<ErrorGeneric> Errors => _errors.AsReadOnly();
+    public IReadOnlyList<Error> Errors => _errors.AsReadOnly();
 
     /// <summary>
     /// This is true if there are no errors 
@@ -66,7 +66,7 @@ namespace StatusGeneric
       set => _successMessage = value;
     }
 
-    public StatusGenericHandler SetStatus(HttpStatusCode statusCode)
+    public StatusHandler SetStatus(HttpStatusCode statusCode)
     {
       StatusCode = statusCode;
       return this;
@@ -79,13 +79,13 @@ namespace StatusGeneric
     /// The result would be error message in status2 would be updates to start with "MyClass>MyProp: This is my error message."
     /// </summary>
     /// <param name="status"></param>
-    public IStatusGeneric CombineStatuses(IStatusGeneric status)
+    public IStatus CombineStatuses(IStatus status)
     {
       if (!status.IsValid)
       {
         _errors.AddRange(string.IsNullOrEmpty(Header)
           ? status.Errors
-          : status.Errors.Select(x => new ErrorGeneric(Header, x)));
+          : status.Errors.Select(x => new Error(Header, x)));
       }
 
       if (IsValid && status.Message != DefaultSuccessMessage)
@@ -115,44 +115,44 @@ namespace StatusGeneric
 
     /// <summary>
     /// This adds one error to the Errors collection
-    /// NOTE: This is virtual so that the StatusGenericHandler.Generic can override it. That allows both to return a IStatusGeneric result
+    /// NOTE: This is virtual so that the StatusHandler.Generic can override it. That allows both to return a IStatus result
     /// </summary>
     /// <param name="errorMessage">The text of the error message</param>
     /// <param name="propertyNames">optional. A list of property names that this error applies to</param>
-    public virtual IStatusGeneric AddError(string errorMessage, params string[] propertyNames)
+    public virtual IStatus AddError(string errorMessage, params string[] propertyNames)
     {
       if (errorMessage == null) throw new ArgumentNullException(nameof(errorMessage));
-      _errors.Add(new ErrorGeneric(Header, new ValidationResult(errorMessage, propertyNames)));
+      _errors.Add(new Error(Header, new ValidationResult(errorMessage, propertyNames)));
       return this;
     }
 
-    public IStatusGeneric AddError(HttpStatusCode statusCode, string errorMessage, params string[] propertyNames)
+    public IStatus AddError(HttpStatusCode statusCode, string errorMessage, params string[] propertyNames)
     {
       if (errorMessage == null) throw new ArgumentNullException(nameof(errorMessage));
-      _errors.Add(new ErrorGeneric(Header, statusCode, new ValidationResult(errorMessage, propertyNames)));
+      _errors.Add(new Error(Header, statusCode, new ValidationResult(errorMessage, propertyNames)));
       return this;
     }
 
     /// <summary>
     /// This adds one error to the Errors collection and saves the exception's data to the DebugData property
     /// </summary>
-    /// <param name="ex">The exception that you want to turn into a IStatusGeneric error.</param>
+    /// <param name="ex">The exception that you want to turn into a IStatus error.</param>
     /// <param name="errorMessage">The user-friendly text for the error message</param>
     /// <param name="propertyNames">optional. A list of property names that this error applies to</param>
-    public IStatusGeneric AddError(Exception ex, string errorMessage, params string[] propertyNames)
+    public IStatus AddError(Exception ex, string errorMessage, params string[] propertyNames)
     {
       if (errorMessage == null) throw new ArgumentNullException(nameof(errorMessage));
-      var errorGeneric = new ErrorGeneric(Header, new ValidationResult(errorMessage, propertyNames));
+      var errorGeneric = new Error(Header, new ValidationResult(errorMessage, propertyNames));
       errorGeneric.CopyExceptionToDebugData(ex);
       _errors.Add(errorGeneric);
       return this;
     }
 
-    public IStatusGeneric AddError(HttpStatusCode statusCode, Exception ex, string errorMessage,
+    public IStatus AddError(HttpStatusCode statusCode, Exception ex, string errorMessage,
       params string[] propertyNames)
     {
       if (errorMessage == null) throw new ArgumentNullException(nameof(errorMessage));
-      _errors.Add(new ErrorGeneric(Header, statusCode, new ValidationResult(errorMessage, propertyNames)));
+      _errors.Add(new Error(Header, statusCode, new ValidationResult(errorMessage, propertyNames)));
       return this;
     }
 
@@ -162,12 +162,12 @@ namespace StatusGeneric
     /// <param name="validationResult"></param>
     public void AddValidationResult(ValidationResult validationResult)
     {
-      _errors.Add(new ErrorGeneric(Header, validationResult));
+      _errors.Add(new Error(Header, validationResult));
     }
 
     public void AddValidationResult(HttpStatusCode statusCode, ValidationResult validationResult)
     {
-      _errors.Add(new ErrorGeneric(Header, statusCode, validationResult));
+      _errors.Add(new Error(Header, statusCode, validationResult));
     }
 
     /// <summary>
@@ -176,13 +176,13 @@ namespace StatusGeneric
     /// <param name="validationResults"></param>
     public void AddValidationResults(IEnumerable<ValidationResult> validationResults)
     {
-      _errors.AddRange(validationResults.Select(x => new ErrorGeneric(Header, x)));
+      _errors.AddRange(validationResults.Select(x => new Error(Header, x)));
     }
 
     public void AddValidationResults(HttpStatusCode statusCode, IEnumerable<ValidationResult> validationResults)
     {
       _errors.AddRange(validationResults
-        .Select(x => new ErrorGeneric(Header, statusCode, x)));
+        .Select(x => new Error(Header, statusCode, x)));
     }
 
     public void RunAndCatchEx(

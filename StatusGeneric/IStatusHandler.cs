@@ -9,29 +9,29 @@ using System.Net;
 namespace StatusGeneric
 {
   /// <summary>
-  /// This is the interface for the full StatusGenericHandler
+  /// This is the interface for the full StatusHandler
   /// </summary>
-  public interface IStatusGenericHandler : IStatusGeneric
+  public interface IStatusHandler : IStatus
   {
     /// <summary>
     /// This adds one error to the Errors collection
-    /// NOTE: This is virtual so that the StatusGenericHandler.Generic can override it. That allows both to return a IStatusGeneric result
+    /// NOTE: This is virtual so that the StatusHandler.Generic can override it. That allows both to return a IStatus result
     /// </summary>
     /// <param name="errorMessage">The text of the error message</param>
     /// <param name="propertyNames">optional. A list of property names that this error applies to</param>
-    IStatusGeneric AddError(string errorMessage, params string[] propertyNames);
+    IStatus AddError(string errorMessage, params string[] propertyNames);
 
-    IStatusGeneric AddError(HttpStatusCode statusCode, string errorMessage, params string[] propertyNames);
+    IStatus AddError(HttpStatusCode statusCode, string errorMessage, params string[] propertyNames);
 
     /// <summary>
     /// This adds one error to the Errors collection and saves the exception's data to the DebugData property
     /// </summary>
-    /// <param name="ex">The exception that you want to turn into a IStatusGeneric error.</param>
+    /// <param name="ex">The exception that you want to turn into a IStatus error.</param>
     /// <param name="errorMessage">The user-friendly text for the error message</param>
     /// <param name="propertyNames">optional. A list of property names that this error applies to</param>
-    IStatusGeneric AddError(Exception ex, string errorMessage, params string[] propertyNames);
+    IStatus AddError(Exception ex, string errorMessage, params string[] propertyNames);
 
-    IStatusGeneric AddError(HttpStatusCode statusCode, Exception ex, string errorMessage,
+    IStatus AddError(HttpStatusCode statusCode, Exception ex, string errorMessage,
       params string[] propertyNames);
 
     /// <summary>

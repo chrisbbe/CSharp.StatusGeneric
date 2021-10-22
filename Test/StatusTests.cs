@@ -17,7 +17,7 @@ namespace Test
       //SETUP 
 
       //ATTEMPT
-      var status = new StatusGenericHandler();
+      var status = new StatusHandler();
 
       //VERIFY
       status.IsValid.ShouldBeTrue();
@@ -29,7 +29,7 @@ namespace Test
     public void TestGenericStatusSetMessageOk()
     {
       //SETUP 
-      var status = new StatusGenericHandler();
+      var status = new StatusHandler();
 
       //ATTEMPT
       status.Message = "New message";
@@ -45,7 +45,7 @@ namespace Test
     public void TestGenericStatusSetMessageViaInterfaceOk()
     {
       //SETUP 
-      IStatusGeneric status = new StatusGenericHandler();
+      IStatus status = new StatusHandler();
 
       //ATTEMPT
       status.Message = "New message";
@@ -61,7 +61,7 @@ namespace Test
     public void TestGenericStatusWithTypeSetMessageViaInterfaceOk()
     {
       //SETUP 
-      IStatusGeneric status = new StatusGenericHandler<string>();
+      IStatus status = new StatusHandler<string>();
 
       //ATTEMPT
       status.Message = "New message";
@@ -77,7 +77,7 @@ namespace Test
     public void TestGenericStatusWithErrorOk()
     {
       //SETUP 
-      var status = new StatusGenericHandler();
+      var status = new StatusHandler();
 
       //ATTEMPT
       status.AddError("This is an error.");
@@ -94,8 +94,8 @@ namespace Test
     public void TestGenericStatusCombineStatusesWithErrorsOk()
     {
       //SETUP 
-      var status1 = new StatusGenericHandler();
-      var status2 = new StatusGenericHandler();
+      var status1 = new StatusHandler();
+      var status2 = new StatusHandler();
 
       //ATTEMPT
       status1.AddError("This is an error.");
@@ -111,8 +111,8 @@ namespace Test
     public void TestGenericStatusCombineStatusesIsValidWithMessageOk()
     {
       //SETUP 
-      var status1 = new StatusGenericHandler();
-      var status2 = new StatusGenericHandler();
+      var status1 = new StatusHandler();
+      var status2 = new StatusHandler();
 
       //ATTEMPT
       status1.Message = "My message";
@@ -127,7 +127,7 @@ namespace Test
     public void TestGenericStatusHeaderAndErrorOk()
     {
       //SETUP 
-      var status = new StatusGenericHandler("MyClass");
+      var status = new StatusHandler("MyClass");
 
       //ATTEMPT
       status.AddError("This is an error.");
@@ -141,8 +141,8 @@ namespace Test
     public void TestGenericStatusHeaderCombineStatusesOk()
     {
       //SETUP 
-      var status1 = new StatusGenericHandler("MyClass");
-      var status2 = new StatusGenericHandler("MyProp");
+      var status1 = new StatusHandler("MyClass");
+      var status2 = new StatusHandler("MyProp");
 
       //ATTEMPT
       status2.AddError("This is an error.");
@@ -158,7 +158,7 @@ namespace Test
     public void TestCaptureException()
     {
       //SETUP
-      var status = new StatusGenericHandler();
+      var status = new StatusHandler();
 
       //ATTEMPT
       try
@@ -195,7 +195,7 @@ namespace Test
       //SETUP 
 
       //ATTEMPT
-      var status = new StatusGenericHandler<string>();
+      var status = new StatusHandler<string>();
 
       //VERIFY
       status.IsValid.ShouldBeTrue();
@@ -208,7 +208,7 @@ namespace Test
       //SETUP 
 
       //ATTEMPT
-      var status = new StatusGenericHandler<string>();
+      var status = new StatusHandler<string>();
       status.SetResult("Hello world");
 
       //VERIFY
@@ -222,7 +222,7 @@ namespace Test
       //SETUP 
 
       //ATTEMPT
-      var status = new StatusGenericHandler<string>();
+      var status = new StatusHandler<string>();
       status.SetResult("Hello world");
       var statusCopy = status.AddError("This is an error.");
 

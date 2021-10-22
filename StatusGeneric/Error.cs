@@ -10,9 +10,9 @@ using System.Text;
 namespace StatusGeneric
 {
   /// <summary>
-  /// This holds an error registered in the <see cref="IStatusGeneric"/> Errors collection
+  /// This holds an error registered in the <see cref="IStatus"/> Errors collection
   /// </summary>
-  public struct ErrorGeneric
+  public struct Error
   {
     /// <summary>
     /// If there are multiple headers this separator is placed between them, e.g. Update>Author
@@ -20,22 +20,22 @@ namespace StatusGeneric
     public const string HeaderSeparator = ">";
 
     /// <summary>
-    /// This ctor will create an ErrorGeneric
+    /// This ctor will create an Error
     /// </summary>
     /// <param name="header"></param>
     /// <param name="error"></param>
-    public ErrorGeneric(string header, ValidationResult error) : this()
+    public Error(string header, ValidationResult error) : this()
     {
       Header = header ?? throw new ArgumentNullException(nameof(header));
       ErrorResult = error ?? throw new ArgumentNullException(nameof(error));
     }
 
-    public ErrorGeneric(string header, HttpStatusCode statusCode, ValidationResult error) : this(header, error)
+    public Error(string header, HttpStatusCode statusCode, ValidationResult error) : this(header, error)
     {
       StatusCode = statusCode;
     }
 
-    internal ErrorGeneric(string prefix, ErrorGeneric existingError)
+    internal Error(string prefix, Error existingError)
     {
       Header = string.IsNullOrEmpty(prefix)
         ? existingError.Header

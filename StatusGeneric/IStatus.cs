@@ -9,12 +9,12 @@ namespace StatusGeneric
   /// <summary>
   /// This is the interface for creating and returning 
   /// </summary>
-  public interface IStatusGeneric
+  public interface IStatus
   {
     /// <summary>
     /// This holds the list of errors. If the collection is empty, then there were no errors
     /// </summary>
-    IReadOnlyList<ErrorGeneric> Errors { get; }
+    IReadOnlyList<Error> Errors { get; }
 
     /// <summary>
     /// This is true if there are no errors registered
@@ -41,7 +41,7 @@ namespace StatusGeneric
     /// This allows statuses to be combined
     /// </summary>
     /// <param name="status"></param>
-    IStatusGeneric CombineStatuses(IStatusGeneric status);
+    IStatus CombineStatuses(IStatus status);
 
     /// <summary>
     /// This is a simple method to output all the errors as a single string - null if no errors
