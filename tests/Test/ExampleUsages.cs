@@ -2,7 +2,6 @@
 // Licensed under MIT license. See License.txt in the project root for license information.
 
 using StatusGeneric;
-using Xunit.Abstractions;
 
 namespace Test
 {

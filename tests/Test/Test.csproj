@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StatusGeneric\StatusGeneric.csproj" />
+    <ProjectReference Include="..\..\src\StatusGeneric\StatusGeneric.csproj" />
   </ItemGroup>
 
 </Project>
