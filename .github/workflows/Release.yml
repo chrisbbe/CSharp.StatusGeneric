@@ -37,4 +37,4 @@ jobs:
       - name: Run './build.cmd Release'
         run: ./build.cmd Release
         env:
-          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}

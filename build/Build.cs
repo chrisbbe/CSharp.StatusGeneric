@@ -23,7 +23,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
   GitHubActionsImage.UbuntuLatest,
   OnPushTags = new[] {"v*"},
   InvokedTargets = new[] {nameof(Release)},
-  ImportSecrets = new[] {"NUGET_TOKEN"}
+  ImportSecrets = new[] {"NUGET_API_KEY"}
 )]
 [CheckBuildProjectConfigurations]
 [ShutdownDotNetAfterServerBuild]
