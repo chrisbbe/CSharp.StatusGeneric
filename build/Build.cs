@@ -1,3 +1,4 @@
+using System.Linq;
 using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
@@ -17,9 +18,16 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
   On = new[] {GitHubActionsTrigger.Push},
   InvokedTargets = new[] {nameof(Test)}
 )]
+[GitHubActions(
+  "Release",
+  GitHubActionsImage.UbuntuLatest,
+  OnPushTags = new[] {"v*"},
+  InvokedTargets = new[] {nameof(Release)},
+  ImportSecrets = new[] {"NUGET_TOKEN"}
+)]
 [CheckBuildProjectConfigurations]
 [ShutdownDotNetAfterServerBuild]
-class Build : NukeBuild
+sealed class Build : NukeBuild
 {
   /// Support plugins are available for:
   ///   - JetBrains ReSharper        https://nuke.build/resharper
@@ -31,6 +39,9 @@ class Build : NukeBuild
   [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
   readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
+  [Parameter] readonly string NugetApiUrl = "https://api.nuget.org/v3/index.json";
+  [Parameter] [Secret] readonly string NugetApiKey;
+
   [Solution] readonly Solution Solution;
   [GitRepository] readonly GitRepository GitRepository;
   [GitVersion] readonly GitVersion GitVersion;
@@ -38,6 +49,7 @@ class Build : NukeBuild
   AbsolutePath SourceDirectory => RootDirectory / "src";
   AbsolutePath TestsDirectory => RootDirectory / "tests";
   AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
+  AbsolutePath NugetDirectory => ArtifactsDirectory / "nuget";
 
   Target Clean => _ => _
     .Before(Restore)
@@ -46,6 +58,7 @@ class Build : NukeBuild
       SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
       TestsDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
       EnsureCleanDirectory(ArtifactsDirectory);
+      EnsureCleanDirectory(NugetDirectory);
     });
 
   Target Restore => _ => _
@@ -74,5 +87,39 @@ class Build : NukeBuild
     {
       DotNetTest(s =>
         s.SetProjectFile(Solution));
+    });
+
+  Target NugetPack => _ => _
+    .DependsOn(Clean)
+    .DependsOn(Test)
+    .Executes(() =>
+    {
+      DotNetPack(s =>
+        s.SetProject(Solution)
+          .SetConfiguration(Configuration)
+          .EnableNoBuild()
+          .EnableNoRestore()
+          .EnableNoDependencies()
+          .SetVersion(GitVersion.NuGetVersionV2)
+          .SetOutputDirectory(NugetDirectory));
+    });
+
+  Target Release => _ => _
+    .DependsOn(NugetPack)
+    .Requires(() => NugetApiUrl)
+    .Requires(() => NugetApiKey)
+    .Requires(() => Configuration.Equals(Configuration.Release))
+    .Executes(() =>
+    {
+      NugetDirectory.GlobFiles("*.nupkg")
+        .NotEmpty()
+        .Where(x => x.Name.StartsWith("CSharp.StatusGeneric"))
+        .ForEach(x =>
+        {
+          DotNetNuGetPush(s => s
+            .SetTargetPath(x)
+            .SetSource(NugetApiUrl)
+            .SetApiKey(NugetApiKey));
+        });
     });
 }
