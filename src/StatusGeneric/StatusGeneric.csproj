@@ -1,11 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>9</LangVersion>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.66" PrivateAssets="All" />
   </ItemGroup>
@@ -16,11 +10,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>10</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>1.2.3</PackageVersion>
-    <Version>1.2.3</Version>
-    <AssemblyVersion>1.2.3</AssemblyVersion>
-    <FileVersion>1.2.3</FileVersion>
     <PackageId>CSharp.StatusGeneric</PackageId>
     <Authors>Jon P Smith and Christian B Bergersen</Authors>
     <Company>Selective Analytics</Company>
@@ -36,9 +28,9 @@
       - Added some interfaces and made Message read/write
     </PackageReleaseNotes>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard2.0\StatusGeneric.xml</DocumentationFile>
-  </PropertyGroup>
+  
+<!--  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">-->
+<!--    <DocumentationFile>bin\Release\netstandard2.0\StatusGeneric.xml</DocumentationFile>-->
+<!--  </PropertyGroup>-->
 
 </Project>
